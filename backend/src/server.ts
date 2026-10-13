@@ -24,7 +24,7 @@ await app.register(fastifyPostgres, {
 });
 
 app.register(infoPlugin)
-app.register(usersRoutes, { prefix: "/users"});
+app.register(usersRoutes, { prefix: "/identity"});
 
 app.get('/health', async () => {
     const { rows } = await app.pg.query('SELECT NOW() as now')
