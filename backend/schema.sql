@@ -11,3 +11,24 @@ CREATE TABLE users (
   id_number     TEXT NOT NULL UNIQUE,
   created_at    TIMESTAMPTZ NOT NULL DEFAULT NOW()
 );
+
+
+CREATE EXTENSION IF NOT EXISTS pgcrypto;
+
+CREATE TABLE qr_sessions (
+    id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
+
+    status TEXT NOT NULL DEFAULT 'pending'
+        CHECK (status IN ('pending', 'claimed', 'expired')),
+
+    claim_token_hash TEXT NOT NULL UNIQUE,
+    poll_token_hash TEXT NOT NULL,
+
+    created_at TIMESTAMPTZ NOT NULL DEFAULT NOW(),
+    expires_at TIMESTAMPTZ NOT NULL,
+    claimed_at TIMESTAMPTZ
+);
+
+CREATE INDEX idx_qr_sessions_expiry
+    ON qr_sessions (expires_at)
+    WHERE status = 'pending';
