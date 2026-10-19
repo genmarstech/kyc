@@ -1,0 +1,17 @@
+
+services:
+  kycdb:
+    image: postgres:16
+    container_name: kycdb
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: secret
+      POSTGRES_DB: mydb
+    ports:
+      - "127.0.0.1:5432:5432"
+    volumes:
+      - kycdb_data:/var/lib/postgresql/data
+
+volumes:
+  kycdb_data:
