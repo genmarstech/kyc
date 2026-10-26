@@ -74,14 +74,16 @@ app.get("/qr/claim", async (_request, reply) => {
 </html>`);
 });
 
-app.get('/health', async () => {
-    const { rows } = await app.pg.query('SELECT NOW() as now')
-    return { status: 'ok', dbTime: rows[0].now }
-});
+// app.get('/health', async () => {
+//     const { rows } = await app.pg.query('SELECT NOW() as now')
+//     return { status: 'ok', dbTime: rows[0].now }
+// });
 
-try {
-    await app.listen({ port: listeningPort, host: '0.0.0.0' })
-} catch (error) {
-    app.log.error(error)
-    process.exit(1)
+await app.listen({ port: listeningPort, host: '0.0.0.0' })
+
+for (const sig of ["SIGINT", 'SIGTERM']) {
+    process.on(sig, async () => {
+        await app.close();
+        process.exit(0);
+    })
 };
