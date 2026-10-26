@@ -10,6 +10,8 @@ function createToken(): string {
   return randomBytes(32).toString("base64url");
 }
 
+
+
 function hashToken(token: string): string {
   return createHash("sha256").update(token).digest("hex");
 }
@@ -47,6 +49,10 @@ export function createQrSessionService(fastify: FastifyInstance) {
         hashToken(pollToken),
         expiresAt,
       );
+
+      if (!session) {
+  throw new Error("Failed to create QR session");
+}
 
       const claimUrl =
         `${getPublicAppUrl()}/qr/claim#token=${claimToken}`;
