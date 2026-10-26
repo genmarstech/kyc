@@ -13,5 +13,19 @@ services:
     volumes:
       - kycdb_data:/var/lib/postgresql/data
 
+  kyc-backend:
+    image: ${KYC_IMAGE}
+    container_name: kyc-backend
+    dockerfile: Dockerfile
+    restart: unless-stopped
+    env_file:
+      - ./kyc/backend/.env
+    depends_on:
+      - kycdb
+
+    ports:
+      -"127.0.0.1:3240"
+ 
+
 volumes:
   kycdb_data:
