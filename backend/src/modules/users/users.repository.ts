@@ -28,7 +28,14 @@ export const createUsersRepository = (db: Db) => ({
           b.address.trim(), b.phone, b.email.toLowerCase(), b.id_number.trim(),
         ]
       )
-      return rows[0]
+
+      const user = rows[0]
+
+      if (!user) {
+        throw new Error("Failed to create user. no rows returned")
+      }
+
+      return user;
     } catch (err: any) {
       if (err.code === "23505") throw new UserAlreadyExistsError()
       throw err
