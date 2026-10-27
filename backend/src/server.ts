@@ -17,9 +17,15 @@ if (!process.env.PORT || Number.isNaN(listeningPort)) {
     throw new Error("PORT env variable is missing or not a valid number")
 };
 
-if (!process.env.DATABASE_URL || Number.isNaN(databaseConnection)) {
-    throw new Error("PORT env variable is missing or not a valid number")
-};
+if (!databaseConnection) {
+    throw new Error("DATABASE_URL environment variable is missing");
+}
+
+try {
+    new URL(databaseConnection);
+} catch {
+    throw new Error("DATABASE_URL must be a valid URL");
+}
 
 await app.register(fastifyPostgres, {
     connectionString: databaseConnection
